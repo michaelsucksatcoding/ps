@@ -1,0 +1,44 @@
+.kotak-konten {
+    width: 98.8vw;
+	height: 100vh;
+	display: inline-block;
+}
+
+.sidebar, .konten{
+	height: 92.3vh;
+	transition: 1.5s;
+}
+
+.konten {
+	overflow: auto;
+}
+
+.sidebar {
+	border-top: 1px solid white;
+	border-right: 1px solid white;
+	overflow-x: hidden;
+}
+
+.konten{
+	width: 84vw;
+}
+
+.nav {
+	margin-top: 1.5vh;
+}
+
+.sidebar .nav .nav-item {
+	padding-top: 1vh;
+	padding-bottom: 1vh;
+	width: 107.5%;
+	border-bottom: 1px solid grey;
+	transition: 0.5s;
+}
+
+.sidebar .nav .nav-item .nav-link {
+	color: white;
+}
+
+.sidebar .nav .nav-item:hover {
+	border:1px solid white;
+}
