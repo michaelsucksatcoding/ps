@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{{ entity.title }} — {{ 'Edit' if is_edit else 'Input' }}{% endblock %}
+{% block header %}{{ entity.title }} — {{ 'Edit' if is_edit else 'Input' }}{% endblock %}
+
+{% block content %}
+  <div class="max-w-2xl">
+    <a href="{{ url_for('data.list_entity', entity=entity_name) }}" class="text-sm text-blue-600 hover:underline mb-4 inline-block">← Kembali</a>
+    <form method="post" class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+      {% for field in entity.form_fields %}
+        {% if not (is_edit and field.get('pk')) %}
+        <div>
+          <label class="block text-sm font-medium text-slate-700" for="{{ field.name }}">{{ field.label }}</label>
+          {% if field.type == 'textarea' %}
+            <textarea name="{{ field.name }}" id="{{ field.name }}" rows="3" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">{{ row[field.name] if row else '' }}</textarea>
+          {% elif field.type == 'select' %}
+            <select name="{{ field.name }}" id="{{ field.name }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2">
+              <option value="">-- pilih --</option>
+              {% for val, label in field.options %}
+                <option value="{{ val }}" {% if row and row[field.name] == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.type == 'fk_guru' %}
+            <select name="{{ field.name }}" id="{{ field.name }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" required>
+              {% for g in gurus %}
+                <option value="{{ g.kode_guru }}" {% if row and row.kode_guru == g.kode_guru %}selected{% endif %}>{{ g.kode_guru }} — {{ g.nama_depan }} {{ g.nama_belakang }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.type == 'fk_kelas' %}
+            <select name="{{ field.name }}" id="{{ field.name }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" required>
+              {% for k in kelas_list %}
+                <option value="{{ k.kode_kelas }}" {% if row and row.kode_kelas == k.kode_kelas %}selected{% endif %}>{{ k.tingkat }} {{ k.kelas }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.type == 'fk_jurusan' %}
+            <select name="{{ field.name }}" id="{{ field.name }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" required>
+              {% for j in jurusan_list %}
+                <option value="{{ j.kode_jurusan }}" {% if row and row.kode_jurusan == j.kode_jurusan %}selected{% endif %}>{{ j.jurusan }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.type == 'password' %}
+            <input type="password" name="{{ field.name }}" id="{{ field.name }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" {% if field.required and not is_edit %}required{% endif %} placeholder="{{ 'Kosongkan jika tidak diubah' if is_edit else '' }}" />
+          {% else %}
+            <input type="{{ field.type }}" name="{{ field.name }}" id="{{ field.name }}" value="{{ row[field.name] if row and row[field.name] is not none else '' }}" class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2" {% if field.required and not is_edit %}required{% endif %} {% if field.get('pk') and is_edit %}readonly{% endif %} />
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endfor %}
+      <button type="submit" class="rounded-xl bg-blue-600 text-white px-5 py-2.5 font-semibold hover:bg-blue-700">Simpan</button>
+    </form>
+  </div>
+{% endblock %}

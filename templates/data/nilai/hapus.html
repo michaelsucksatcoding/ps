@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Hapus Nilai{% endblock %}
+{% block header %}Hapus Header Nilai{% endblock %}
+
+{% block content %}
+  <form method="post" class="max-w-lg bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+    <select name="id_nilai" class="w-full rounded-xl border border-slate-300 px-3 py-2" required>
+      <option value="">-- Pilih header nilai --</option>
+      {% for h in headers %}
+        <option value="{{ h.id_nilai }}">#{{ h.id_nilai }} — {{ h.keterangan_nilai }} ({{ h.kode_pelajaran }}, sem {{ h.semester }})</option>
+      {% endfor %}
+    </select>
+    <div class="flex gap-3">
+      <button type="submit" class="rounded-xl bg-red-600 text-white px-4 py-2 text-sm font-semibold">Hapus</button>
+      <a href="{{ url_for('data.nilai_index') }}" class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold">Batal</a>
+    </div>
+  </form>
+{% endblock %}

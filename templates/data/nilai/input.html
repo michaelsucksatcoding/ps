@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Input Nilai{% endblock %}
+{% block header %}Input Nilai{% endblock %}
+
+{% block content %}
+  <form method="get" class="bg-white rounded-2xl border border-slate-200 p-4 mb-4 grid md:grid-cols-3 gap-3">
+    <select name="kode_pelajaran" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" required>
+      <option value="">Pelajaran</option>
+      {% for p in options.pelajaran %}<option value="{{ p.kode_pelajaran }}" {% if filters.kode_pelajaran == p.kode_pelajaran %}selected{% endif %}>{{ p.pelajaran }}</option>{% endfor %}
+    </select>
+    <select name="kode_kelas" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" required>
+      <option value="">Kelas</option>
+      {% for k in options.kelas %}<option value="{{ k.kode_kelas }}" {% if filters.kode_kelas == k.kode_kelas %}selected{% endif %}>{{ k.tingkat }} {{ k.kelas }}</option>{% endfor %}
+    </select>
+    <select name="kode_jurusan" class="rounded-lg border border-slate-300 px-3 py-2 text-sm" required>
+      <option value="">Jurusan</option>
+      {% for j in options.jurusan %}<option value="{{ j.kode_jurusan }}" {% if filters.kode_jurusan == j.kode_jurusan %}selected{% endif %}>{{ j.jurusan }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="rounded-lg bg-slate-800 text-white px-4 py-2 text-sm font-semibold md:col-span-3">Muat Siswa</button>
+  </form>
+
+  {% if students %}
+  <form method="post" class="bg-white rounded-2xl border border-slate-200 p-6">
+    <input type="hidden" name="kode_pelajaran" value="{{ filters.kode_pelajaran }}" />
+    <input type="hidden" name="kode_kelas" value="{{ filters.kode_kelas }}" />
+    <input type="hidden" name="kode_jurusan" value="{{ filters.kode_jurusan }}" />
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="text-sm font-medium">Keterangan Nilai</label>
+        <input name="keterangan_nilai" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="tugas 1 / UTS / UAS" value="{{ filters.keterangan_nilai or 'tugas 1' }}" required />
+      </div>
+      <div>
+        <label class="text-sm font-medium">Guru</label>
+        <select name="kode_guru" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" required>
+          {% for g in gurus %}<option value="{{ g.kode_guru }}">{{ g.nama_depan }} {{ g.nama_belakang }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-medium">Semester</label>
+        <select name="semester" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" required>
+          <option value="1">1</option><option value="2">2</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-medium">Tahun Ajaran</label>
+        <input name="tahun_ajaran" class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="2025 / 2026" required />
+      </div>
+    </div>
+    <table class="min-w-full text-sm mb-4">
+      <thead class="bg-slate-100"><tr><th class="px-3 py-2">NIS</th><th class="px-3 py-2">Nama</th><th class="px-3 py-2">Nilai</th></tr></thead>
+      <tbody>
+        {% for s in students %}
+          <tr class="border-t">
+            <td class="px-3 py-2">{{ s.nis }}<input type="hidden" name="nis" value="{{ s.nis }}" /></td>
+            <td class="px-3 py-2">{{ s.nama_depan }} {{ s.nama_belakang }}</td>
+            <td class="px-3 py-2"><input type="number" step="0.01" name="nilai" class="w-24 rounded border border-slate-300 px-2 py-1" /></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="rounded-xl bg-blue-600 text-white px-5 py-2.5 font-semibold hover:bg-blue-700">Simpan Nilai</button>
+  </form>
+  {% endif %}
+{% endblock %}

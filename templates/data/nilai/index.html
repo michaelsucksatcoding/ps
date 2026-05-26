@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Data Nilai{% endblock %}
+{% block header %}Data Nilai Siswa{% endblock %}
+
+{% block content %}
+  <div class="flex flex-wrap gap-3 mb-4">
+    <a href="{{ url_for('data.nilai_input') }}" class="rounded-xl bg-blue-600 text-white px-4 py-2 text-sm font-semibold hover:bg-blue-700">Input Nilai</a>
+    <a href="{{ url_for('data.nilai_hapus') }}" class="rounded-xl border border-red-300 text-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-50">Hapus</a>
+  </div>
+
+  <form class="bg-white rounded-2xl border border-slate-200 p-4 mb-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"
+        hx-get="{{ url_for('data.nilai_index') }}"
+        hx-target="#nilai-table-wrap"
+        hx-swap="innerHTML"
+        hx-trigger="change">
+    <div>
+      <label class="text-xs font-medium text-slate-600">Pelajaran</label>
+      <select name="kode_pelajaran" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Pelajaran --</option>
+        {% for p in options.pelajaran %}
+          <option value="{{ p.kode_pelajaran }}" {% if filters.kode_pelajaran == p.kode_pelajaran %}selected{% endif %}>{{ p.pelajaran }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-medium text-slate-600">Kelas</label>
+      <select name="kode_kelas" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Kelas --</option>
+        {% for k in options.kelas %}
+          <option value="{{ k.kode_kelas }}" {% if filters.kode_kelas == k.kode_kelas %}selected{% endif %}>{{ k.tingkat }} ({{ k.kelas }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-medium text-slate-600">Semester</label>
+      <select name="semester" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Semester --</option>
+        {% for s in options.semester %}
+          <option value="{{ s }}" {% if filters.semester == s %}selected{% endif %}>Semester {{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-medium text-slate-600">Tahun Ajaran</label>
+      <select name="tahun_ajaran" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Tahun --</option>
+        {% for t in options.tahun_ajaran %}
+          <option value="{{ t }}" {% if filters.tahun_ajaran == t %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-medium text-slate-600">Jurusan</label>
+      <select name="kode_jurusan" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Jurusan --</option>
+        {% for j in options.jurusan %}
+          <option value="{{ j.kode_jurusan }}" {% if filters.kode_jurusan == j.kode_jurusan %}selected{% endif %}>{{ j.jurusan }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-medium text-slate-600">Tugas Ke</label>
+      <select name="tugas_ke" class="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm">
+        <option value="">-- Tugas --</option>
+        {% for t in tugas_options %}
+          <option value="{{ t }}" {% if filters.tugas_ke == t %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <div id="nilai-table-wrap">
+    {% include 'data/nilai/_table.html' %}
+  </div>
+{% endblock %}

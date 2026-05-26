@@ -1,0 +1,28 @@
+<div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+  <table class="min-w-full text-sm">
+    <thead class="bg-slate-100 text-center">
+      <tr>
+        <th class="px-4 py-2">No</th>
+        <th class="px-4 py-2">NIS</th>
+        <th class="px-4 py-2">Nama</th>
+        <th class="px-4 py-2">Tugas</th>
+        <th class="px-4 py-2">UTS</th>
+        <th class="px-4 py-2">UAS</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr class="border-t border-slate-100 text-center">
+          <td class="px-4 py-2">{{ loop.index }}</td>
+          <td class="px-4 py-2 font-medium">{{ row.nis }}</td>
+          <td class="px-4 py-2">{{ row.nama }}</td>
+          <td class="px-4 py-2">{{ row.tugas }}</td>
+          <td class="px-4 py-2">{{ row.uts }}</td>
+          <td class="px-4 py-2">{{ row.uas }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="px-4 py-8 text-slate-500">Belum ada data / lengkapi filter</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

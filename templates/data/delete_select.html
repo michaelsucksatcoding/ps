@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Hapus — {{ cfg.title }}{% endblock %}
+{% block header %}Hapus — {{ cfg.title }}{% endblock %}
+
+{% block content %}
+  <form method="post" class="max-w-md bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+    <p class="text-sm text-slate-600">Pilih data yang akan dihapus:</p>
+    <select name="{{ cfg.pk }}" class="w-full rounded-xl border border-slate-300 px-3 py-2" required>
+      <option value="">-- pilih --</option>
+      {% for row in rows %}
+        <option value="{{ row[cfg.pk] }}">{{ row[cfg.pk] }}</option>
+      {% endfor %}
+    </select>
+    <div class="flex gap-3">
+      <button type="submit" class="rounded-xl bg-red-600 text-white px-4 py-2 text-sm font-semibold">Lanjut</button>
+      <a href="{{ url_for('data.list_entity', entity=entity_name) }}" class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold">Batal</a>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}{{ cfg.title }}{% endblock %}
+{% block header %}{{ cfg.title }}{% endblock %}
+
+{% block content %}
+  <div class="flex flex-wrap gap-3 mb-4">
+    <a href="{{ url_for('data.create_entity', entity=entity_name) }}" class="rounded-xl bg-blue-600 text-white px-4 py-2 text-sm font-semibold hover:bg-blue-700">Input</a>
+    <a href="{{ url_for('data.delete_entity_select', entity=entity_name) }}" class="rounded-xl border border-red-300 text-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-50">Hapus</a>
+    <a href="{{ url_for('main.dashboard') }}" class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50">Dashboard</a>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-slate-100 text-left">
+        <tr>
+          <th class="px-4 py-2">No</th>
+          {% for _col, label in cfg.list_columns %}
+            <th class="px-4 py-2">{{ label }}</th>
+          {% endfor %}
+          <th class="px-4 py-2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr class="border-t border-slate-100 hover:bg-slate-50">
+            <td class="px-4 py-2">{{ loop.index }}</td>
+            {% for col, _label in cfg.list_columns %}
+              <td class="px-4 py-2">{{ row[col] }}</td>
+            {% endfor %}
+            <td class="px-4 py-2">
+              <a class="text-blue-600 hover:underline text-xs font-semibold" href="{{ url_for('data.edit_entity', entity=entity_name, pk=row[cfg.pk]) }}">Edit</a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="{{ cfg.list_columns|length + 2 }}" class="px-4 py-8 text-center text-slate-500">Belum ada data</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

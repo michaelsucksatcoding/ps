@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Admin{% endblock %}
+{% block header %}Dashboard Admin{% endblock %}
+
+{% block content %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div class="text-sm text-slate-500">Total Guru</div>
+      <div class="text-3xl font-bold text-blue-600 mt-1">{{ totals.guru }}</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div class="text-sm text-slate-500">Total Siswa</div>
+      <div class="text-3xl font-bold text-emerald-600 mt-1">{{ totals.siswa }}</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div class="text-sm text-slate-500">Mata Pelajaran</div>
+      <div class="text-3xl font-bold text-violet-600 mt-1">{{ totals.mapel }}</div>
+    </div>
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div class="text-sm text-slate-500">Rata-rata Nilai</div>
+      <div class="text-3xl font-bold text-amber-600 mt-1">{{ '%.1f'|format(stats.rata_rata) }}</div>
+    </div>
+  </div>
+
+  <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-8">
+    <div class="px-5 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+      <h2 class="font-semibold">Data Siswa</h2>
+      <span class="text-sm text-slate-500">{{ siswa_list|length }} Siswa</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-100 text-left">
+          <tr>
+            <th class="px-4 py-2">No</th>
+            <th class="px-4 py-2">NIS</th>
+            <th class="px-4 py-2">Nama</th>
+            <th class="px-4 py-2">Kelas</th>
+            <th class="px-4 py-2">Jurusan</th>
+            <th class="px-4 py-2">Gender</th>
+            <th class="px-4 py-2">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in siswa_list %}
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="px-4 py-2">{{ loop.index }}</td>
+              <td class="px-4 py-2 font-medium">{{ s.nis }}</td>
+              <td class="px-4 py-2">{{ s.nama_siswa }}</td>
+              <td class="px-4 py-2">{{ s.kelas }}</td>
+              <td class="px-4 py-2">{{ s.jurusan }}</td>
+              <td class="px-4 py-2">{{ 'Laki-laki' if s.jenis_kelamin == 'L' else ('Perempuan' if s.jenis_kelamin == 'P' else '-') }}</td>
+              <td class="px-4 py-2">
+                <a class="text-blue-600 hover:underline text-xs font-semibold" href="{{ url_for('data.nilai_index', nis=s.nis) }}">Nilai</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">Belum ada data siswa</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-8">
+    <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+      <h2 class="font-semibold">Rekapan Nilai</h2>
+      <p class="text-xs text-slate-500">Status ketuntasan KKM</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-100 text-left">
+          <tr>
+            <th class="px-4 py-2">No</th>
+            <th class="px-4 py-2">NIS</th>
+            <th class="px-4 py-2">Nama</th>
+            <th class="px-4 py-2">Kelas</th>
+            <th class="px-4 py-2">Jurusan</th>
+            <th class="px-4 py-2">Mapel</th>
+            <th class="px-4 py-2">Rata²</th>
+            <th class="px-4 py-2">Tuntas</th>
+            <th class="px-4 py-2">Remidi</th>
+            <th class="px-4 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rekap %}
+            {% if r.belum_tuntas == 0 %}
+              {% set status = 'Lulus Semua' %}
+              {% set badge = 'bg-green-100 text-green-800' %}
+            {% elif r.belum_tuntas <= 2 %}
+              {% set status = 'Perlu Remidi' %}
+              {% set badge = 'bg-amber-100 text-amber-800' %}
+            {% else %}
+              {% set status = 'Butuh Perhatian' %}
+              {% set badge = 'bg-red-100 text-red-800' %}
+            {% endif %}
+            <tr class="border-t border-slate-100">
+              <td class="px-4 py-2">{{ loop.index }}</td>
+              <td class="px-4 py-2 font-medium">{{ r.nis }}</td>
+              <td class="px-4 py-2">{{ r.nama_siswa }}</td>
+              <td class="px-4 py-2">{{ r.kelas }}</td>
+              <td class="px-4 py-2">{{ r.jurusan }}</td>
+              <td class="px-4 py-2 text-center">{{ r.jumlah_mapel }}</td>
+              <td class="px-4 py-2 font-semibold">{{ '%.1f'|format(r.rata_rata) }}</td>
+              <td class="px-4 py-2 text-center text-green-700">{{ r.tuntas }}</td>
+              <td class="px-4 py-2 text-center text-red-600">{{ r.belum_tuntas }}</td>
+              <td class="px-4 py-2"><span class="text-xs px-2 py-1 rounded-full {{ badge }}">{{ status }}</span></td>
+            </tr>
+          {% else %}
+            <tr><td colspan="10" class="px-4 py-8 text-center text-slate-500">Belum ada data nilai</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div class="px-5 py-4 border-b border-slate-200 bg-slate-50">
+      <h2 class="font-semibold">Rekapan Guru &amp; Mapel Diampu</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-100 text-left">
+          <tr>
+            <th class="px-4 py-2">No</th>
+            <th class="px-4 py-2">Kode</th>
+            <th class="px-4 py-2">Nama Guru</th>
+            <th class="px-4 py-2">Mapel Diampu</th>
+            <th class="px-4 py-2">Jumlah</th>
+            <th class="px-4 py-2">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for g in guru_mapel %}
+            <tr class="border-t border-slate-100">
+              <td class="px-4 py-2">{{ loop.index }}</td>
+              <td class="px-4 py-2 font-medium">{{ g.kode_guru }}</td>
+              <td class="px-4 py-2">{{ g.nama_guru }}</td>
+              <td class="px-4 py-2 text-xs text-slate-600">{{ g.mapel_diampu }}</td>
+              <td class="px-4 py-2 text-center">{{ g.jumlah_mapel }}</td>
+              <td class="px-4 py-2">
+                <a class="text-blue-600 hover:underline text-xs font-semibold" href="{{ url_for('data.edit_entity', entity='guru', pk=g.kode_guru) }}">Edit</a>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Belum ada data guru</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+        <div class="px-6 py-4 border-b border-slate-200">
+          <h1 class="text-center text-lg font-bold tracking-wide">SIGNUP</h1>
+        </div>
+
+        <div class="p-6">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <div class="space-y-2 mb-4">
+                {% for category, msg in messages %}
+                  <div class="text-sm rounded-lg px-3 py-2 border {{ 'border-red-200 bg-red-50 text-red-700' if category=='error' else 'border-amber-200 bg-amber-50 text-amber-700' }}">
+                    {{ msg }}
+                  </div>
+                {% endfor %}
+              </div>
+{% endif %}
+          {% endwith %}
+
+          <form method="post" action="{{ url_for('main.signup') }}" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700" for="username">Username</label>
+              <input
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                name="username"
+                id="username"
+                autocomplete="username"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700" for="password">Password</label>
+              <input
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="password"
+                name="password"
+                id="password"
+                autocomplete="new-password"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-slate-700" for="role">Role</label>
+              <select
+                class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="role"
+                id="role"
+                required
+              >
+                <option value="Admin">Admin</option>
+                <option value="Guru">Guru</option>
+                <option value="Siswa">Siswa</option>
+              </select>
+            </div>
+
+            <div id="admin-extra" class="hidden">
+              <div class="text-xs text-slate-500">
+                Admin signup only requires username/password.
+              </div>
+            </div>
+
+            <div id="guru-extra" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700" for="nama_depan">Nama Depan</label>
+                <input
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  name="nama_depan"
+                  id="nama_depan"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-700" for="nama_belakang">Nama Belakang</label>
+                <input
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  name="nama_belakang"
+                  id="nama_belakang"
+                />
+              </div>
+            </div>
+
+            <div id="siswa-extra" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-slate-700" for="siswa_nama_ortu">Nama Orang Tua (optional)</label>
+                <input
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  name="nama_ortu"
+                  id="siswa_nama_ortu"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-700" for="siswa_kode_kelas">Kode Kelas</label>
+                <input
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  name="kode_kelas"
+                  id="siswa_kode_kelas"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-700" for="siswa_kode_jurusan">Kode Jurusan</label>
+                <input
+                  class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  name="kode_jurusan"
+                  id="siswa_kode_jurusan"
+                />
+              </div>
+            </div>
+
+            <button class="w-full rounded-xl bg-blue-600 text-white font-semibold py-2.5 hover:bg-blue-700 transition" type="submit">
+              Signup
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <p class="mt-4 text-center text-xs text-slate-500">
+        Powered by Flask
+      </p>
+    </div>
+
+    <script>
+      const role = document.getElementById('role');
+      const guruExtra = document.getElementById('guru-extra');
+      const siswaExtra = document.getElementById('siswa-extra');
+      function syncExtra(){
+        const r = role.value;
+        guruExtra.classList.add('hidden');
+        siswaExtra.classList.add('hidden');
+
+        if(r === 'Guru'){
+          guruExtra.classList.remove('hidden');
+        } else if(r === 'Siswa'){
+          guruExtra.classList.remove('hidden');
+          siswaExtra.classList.remove('hidden');
+        }
+      }
+      role.addEventListener('change', syncExtra);
+      syncExtra();
+    </script>
+  </body>
+</html>
+

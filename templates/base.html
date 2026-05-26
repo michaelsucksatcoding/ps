@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}SMK Grading{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen flex">
+      {% if current_user.is_authenticated %}
+        <aside class="w-64 bg-white border-r border-slate-200 hidden md:block shrink-0">
+          <div class="p-5 border-b border-slate-200">
+            <div class="text-lg font-bold">SMKN 1 Bengkulu</div>
+            <div class="text-xs text-slate-500">Aplikasi Pengolahan Nilai</div>
+          </div>
+          <nav class="p-4 space-y-1 text-sm">
+            {% set nav = [
+              ('main.dashboard', 'Dashboard', {}),
+              ('data.list_entity', 'Data Admin', {'entity': 'admin'}),
+              ('data.list_entity', 'Data Guru', {'entity': 'guru'}),
+              ('data.list_entity', 'Data Siswa', {'entity': 'siswa'}),
+              ('data.list_entity', 'Data Pelajaran', {'entity': 'pelajaran'}),
+              ('data.list_entity', 'Data Kelas', {'entity': 'kelas'}),
+              ('data.list_entity', 'Data Jurusan', {'entity': 'jurusan'}),
+              ('data.nilai_index', 'Data Nilai', {}),
+              ('main.kredit', 'Kredit', {}),
+            ] %}
+            {% for endpoint, label, kwargs in nav %}
+              {% set active = request.endpoint == endpoint and (not kwargs.get('entity') or request.view_args.get('entity') == kwargs.get('entity')) %}
+              <a href="{{ url_for(endpoint, **kwargs) }}"
+                 class="block rounded-lg px-3 py-2 font-medium {{ 'bg-blue-50 text-blue-700' if active else 'hover:bg-slate-100 text-slate-700' }}">
+                {{ label }}
+              </a>
+            {% endfor %}
+          </nav>
+        </aside>
+      {% endif %}
+
+      <main class="flex-1 min-w-0">
+        <header class="bg-white border-b border-slate-200">
+          <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="font-semibold">{% block header %}Dashboard Admin{% endblock %}</div>
+            {% if current_user.is_authenticated %}
+              <form method="post" action="{{ url_for('auth.logout') }}">
+                <button class="text-sm font-medium text-red-600 hover:text-red-700" type="submit">Logout</button>
+              </form>
+            {% endif %}
+          </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 py-6">
+          {% include 'partials/flash_message.html' %}
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

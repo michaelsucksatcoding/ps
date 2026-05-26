@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Konfirmasi Hapus{% endblock %}
+{% block header %}Konfirmasi Hapus — {{ cfg.title }}{% endblock %}
+
+{% block content %}
+  <div class="max-w-md bg-white rounded-2xl border border-red-200 p-6">
+    <p class="text-sm mb-4">Yakin hapus <strong>{{ pk }}</strong>?</p>
+    <form method="post" class="flex gap-3">
+      <button type="submit" class="rounded-xl bg-red-600 text-white px-4 py-2 text-sm font-semibold">Hapus</button>
+      <a href="{{ url_for('data.list_entity', entity=entity_name) }}" class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold">Batal</a>
+    </form>
+  </div>
+{% endblock %}
